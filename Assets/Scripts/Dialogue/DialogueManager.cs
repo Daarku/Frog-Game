@@ -24,7 +24,7 @@ public class DialogueManager : MonoBehaviour
         currentActors = actors; 
         activeMessage = 0;
         IsActive = true;
-        Debug.Log("Everything is loaded & your talking!" + messages.Length);
+        // Debug.Log("Everything is loaded & your talking!" + messages.Length);
         DisplayMessage();
         backgroundBox.LeanScale(Vector3.one, 0.2f).setEaseInExpo()  ;
     }
