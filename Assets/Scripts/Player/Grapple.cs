@@ -1,7 +1,7 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Grappling : MonoBehaviour
 {
     public Camera Camera;
@@ -14,6 +14,7 @@ public class Grappling : MonoBehaviour
     public bool isGrappling;
     public Transform lookToHook;
 
+    [SerializeField] private float maxRopeLength = 10f;
 
     // Start is called before the first frame update
     void Start()
@@ -22,21 +23,17 @@ public class Grappling : MonoBehaviour
         _Distancejoint.autoConfigureDistance = true;
         _Distancejoint.enabled = false;
         _lineRenderer.enabled = false;
-
     }
-
 
     // Update is called once per frame
     void Update()
     {
         MouseDir = Camera.ScreenToWorldPoint(Input.mousePosition);
 
-        if (isGrappling == true)
+        if (isGrappling)
         {
-
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                // Im not sure how to read the mouse location, so i just kinda took the position relative to the camera in vector form & set the line renderer positions from it to player.
                 Vector2 mousepos = (Vector2)Camera.ScreenToWorldPoint(Input.mousePosition);
                 _lineRenderer.SetPosition(0, mousepos);
                 _lineRenderer.SetPosition(1, transform.position);
@@ -50,18 +47,24 @@ public class Grappling : MonoBehaviour
                 _lineRenderer.SetPosition(1, transform.position);
                 _lineRenderer.enabled = true;
             }
-
             else if (Input.GetKeyUp(KeyCode.Mouse0))
             {
                 _Distancejoint.enabled = false;
                 _lineRenderer.enabled = false;
             }
+
             if (_Distancejoint.enabled)
             {
+                Vector2 playerToAnchor = _Distancejoint.connectedAnchor - (Vector2)transform.position;
+                if (playerToAnchor.magnitude > maxRopeLength)
+                {
+                    playerToAnchor = playerToAnchor.normalized * maxRopeLength;
+                    _Distancejoint.connectedAnchor = (Vector2)transform.position + playerToAnchor;
+                }
+                _lineRenderer.SetPosition(0, _Distancejoint.connectedAnchor);
                 _lineRenderer.SetPosition(1, transform.position);
             }
 
-            //The pull mechanic,
             if (Input.GetKey(KeyCode.E) && Input.GetKey(KeyCode.Mouse0))
             {
                 Vector3 Direction = LineThing.position - transform.position;
@@ -73,9 +76,7 @@ public class Grappling : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.E) && Input.GetKey(KeyCode.Mouse0))
             {
                 _Distancejoint.enabled = true;
-
             }
         }
-
     }
 }

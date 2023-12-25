@@ -3,17 +3,21 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float speed;
     [SerializeField] private float jumpPower;
+    
+    [Header("Layers")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
+
+
     private Rigidbody2D body;
     private Animator anim;
     private BoxCollider2D boxCollider;
     private float wallJumpCooldown;
     private float horizontalInput;
 
-    // Awake is called when the script is loaded, check the documentation.
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -26,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
 
-        //The player flipping, ( i just invert it depengin on horizonal input)
+        //The player flipping
         if (horizontalInput > 0.01f)
             transform.localScale = new Vector3(5, 5, 5);
         else if (horizontalInput < -0.01f)
@@ -36,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", isGrounded());
 
-        //Wall jump things, bassicly if  its off cooldown it willset the gravity to lower i hope it does not break, if it does im going to just delete it
+        //Wall jump things
         if (wallJumpCooldown > 0.2f)
         {
             body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
