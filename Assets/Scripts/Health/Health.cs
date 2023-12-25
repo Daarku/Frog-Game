@@ -13,9 +13,6 @@ public class Health : MonoBehaviour
     [SerializeField] private float invDuration;
     [SerializeField] private float flashNumber;
     private SpriteRenderer spriteRenderer;
-    [SerializeField] private AudioClip DeathSound;
-    [SerializeField] private AudioClip HurtSound;
-    private AudioClip Cuh;
 
     private void Awake()
     {
@@ -23,16 +20,12 @@ public class Health : MonoBehaviour
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-    //Player damage
-   
     public void TakeDamage(float _damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
 
         if (currentHealth > 0)
         {
-            SoundManager.instance.Playsound(HurtSound);
             anim.SetTrigger("hurt");
             StartCoroutine(Invunerability());
         }
@@ -41,23 +34,17 @@ public class Health : MonoBehaviour
             if (!dead)
             {
                 anim.SetTrigger("dead");
-                SoundManager.instance.Playsound(DeathSound);
                 GetComponent<PlayerMovement>().enabled = false;
                 GetComponent<Grappling>().enabled = false;
-                Physics2D.IgnoreLayerCollision(8, 9, true);
-                dead = true;
 
+                dead = true;
             }
         }
     }
-
-    // Adding health
-
     public void AddHealth(float _value)
     {
         currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
     }
-    // Temporary damage test when you press C
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
@@ -66,21 +53,7 @@ public class Health : MonoBehaviour
         }
     }
 
-    //Respawning
-    public void Respawn()
-    {
-        dead = false;
-        AddHealth(startingHealth);
-        anim.ResetTrigger("dead");
-        anim.Play("player_idle");
-        StartCoroutine(Invunerability()); // Can be removed, just for QoL.
-
-        GetComponent<PlayerMovement>().enabled = true;
-        GetComponent<Grappling>().enabled = true;
-        Physics2D.IgnoreLayerCollision(8, 9, false);
-    }
-    //Invunerability Counters
-
+    //Iframe Counters
     private IEnumerator Invunerability()
     {
         Physics2D.IgnoreLayerCollision(8, 9, true);
