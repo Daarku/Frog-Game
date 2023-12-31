@@ -1,28 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    [SerializeField] private float ShotCooldown;
-    private Animator animator;
-    private PlayerMovement playerMovement;
-    private float Cooldown = Mathf.Infinity;
-
-    private void Awake()
-    {
-        playerMovement = GetComponent<PlayerMovement>();
-    }
+    public Animator animator;
+    // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1) && ShotCooldown > Cooldown)
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             Attacking();
         }
-       ShotCooldown = Time.deltaTime;
     }
 
     void Attacking()
     {
-        Cooldown = 0;
         animator.SetTrigger("Attack");
     }
 

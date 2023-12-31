@@ -3,12 +3,13 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
     private float zoom;
-    [Header("Camera Settings")]
+    [Header("Camera Adjustables")]
     [SerializeField] private float zoomMultiplier = 4f;
     [SerializeField] private float minZoom = 2f;
     [SerializeField] float maxZoom = 15f;
     private float velocity = 0f;
     private float smoothTime = 0.25f;
+
     [SerializeField] private Camera cam;
 
     private void Start()
